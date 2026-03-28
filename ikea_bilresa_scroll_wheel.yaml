@@ -1,5 +1,5 @@
 blueprint:
-  name: Ikea_bilresa_scroll_wheel
+  name: Ikea Bilresa Scroll Wheel
   description: |
       Blueprint for Ikea Bilresa Matter (button and scroll wheel for 3 different channels)
       Version: 2026-03-22
@@ -773,19 +773,19 @@ trigger_variables:
   # Channel 1
   var_button_ch1: >
     {% for item in device_entities(var_remote) %}
-      {% if item is match('^event\\..*_pos_1_press$') %}
+      {% if item is match('^event\\..*pos_1_press$') %}
         {{ item }}
       {% endif %}
     {% endfor %}
   var_scroll_left_ch1: >
     {% for item in device_entities(var_remote) %}
-      {% if item is match('^event\\..*_pos_1_ccw$') %}
+      {% if item is match('^event\\..*pos_1_ccw$') %}
         {{ item }}
       {% endif %}
     {% endfor %}
   var_scroll_right_ch1: >
     {% for item in device_entities(var_remote) %}
-      {% if item is match('^event\\..*_pos_1_cw$') %}
+      {% if item is match('^event\\..*pos_1_cw$') %}
         {{ item }}
       {% endif %}
     {% endfor %}
@@ -793,19 +793,19 @@ trigger_variables:
   # Channel 2
   var_button_ch2: >
     {% for item in device_entities(var_remote) %}
-      {% if item is match('^event\\..*_pos_2_press$') %}
+      {% if item is match('^event\\..*pos_2_press$') %}
         {{ item }}
       {% endif %}
     {% endfor %}
   var_scroll_left_ch2: >
     {% for item in device_entities(var_remote) %}
-      {% if item is match('^event\\..*_pos_2_ccw$') %}
+      {% if item is match('^event\\..*pos_2_ccw$') %}
         {{ item }}
       {% endif %}
     {% endfor %}
   var_scroll_right_ch2: >
     {% for item in device_entities(var_remote) %}
-      {% if item is match('^event\\..*_pos_2_cw$') %}
+      {% if item is match('^event\\..*pos_2_cw$') %}
         {{ item }}
       {% endif %}
     {% endfor %}
@@ -813,19 +813,19 @@ trigger_variables:
   # Channel 3
   var_button_ch3: >
     {% for item in device_entities(var_remote) %}
-      {% if item is match('^event\\..*_pos_3_press$') %}
+      {% if item is match('^event\\..*pos_3_press$') %}
         {{ item }}
       {% endif %}
     {% endfor %}
   var_scroll_left_ch3: >
     {% for item in device_entities(var_remote) %}
-      {% if item is match('^event\\..*_pos_3_ccw$') %}
+      {% if item is match('^event\\..*pos_3_ccw$') %}
         {{ item }}
       {% endif %}
     {% endfor %}
   var_scroll_right_ch3: >
     {% for item in device_entities(var_remote) %}
-      {% if item is match('^event\\..*_pos_3_cw$') %}
+      {% if item is match('^event\\..*pos_3_cw$') %}
         {{ item }}
       {% endif %}
     {% endfor %}
