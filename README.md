@@ -16,7 +16,8 @@ https://community.home-assistant.io/t/ikea-bilresa-scroll-wheel-blueprint-matter
 This fork enhances compatibility, naming flexibility, and long‑term maintainability.
 
 ## Usage
-Import the blueprint into Home Assistant using the raw GitHub URL:
+Import the blueprint into Home Assistant using the raw GitHub URL: https://raw.githubusercontent.com/bradbowles/home-assistant-bilresa-blueprint/refs/heads/main/ikea_bilresa_scroll_wheel.yaml
+
 Entities were renamed to:
 event.pos_1_cw
 event.pos_1_ccw
