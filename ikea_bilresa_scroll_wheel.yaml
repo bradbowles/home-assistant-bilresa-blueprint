@@ -1,10 +1,9 @@
 blueprint:
-  name: Ikea Bilresa Scroll Wheel (DIY)
+  name: Ikea Bilresa Scroll Wheel
   description: |
       Blueprint for Ikea Bilresa Matter (button and scroll wheel for 3 different channels)
       Version: 2026-04-17
       Info (original blueprint): https://community.home-assistant.io/t/ikea-bilresa-scroll-wheel-blueprint-matter/965365
-      Modified by: kekkon
   domain: automation
 
   # input selectors
