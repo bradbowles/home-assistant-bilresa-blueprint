@@ -1,11 +1,12 @@
 blueprint:
-  name: Ikea Bilresa Scroll Wheel
+  name: Ikea Bilresa Scroll Wheel (DIY)
   description: |
       Blueprint for Ikea Bilresa Matter (button and scroll wheel for 3 different channels)
-      Version: 2026-03-22
-      Info: https://community.home-assistant.io/t/ikea-bilresa-scroll-wheel-blueprint-matter/965365
+      Version: 2026-04-17
+      Info (original blueprint): https://community.home-assistant.io/t/ikea-bilresa-scroll-wheel-blueprint-matter/965365
+      Modified by: kekkon
   domain: automation
-  
+
   # input selectors
   input:
     remote:
@@ -61,7 +62,7 @@ blueprint:
                 domain:
                 - light
                 - media_player
-                
+
           default: []
         scroll_wheel_mode_ch1:
           selector:
@@ -101,7 +102,7 @@ blueprint:
           description: |
             <relaxed>: one action call after scrolling
             <instant>: many action calls while scrolling
-            
+
             Beware:
             for <instant> mode the 9 hidden sensor entities of Bilresa device have to be enabled
         scroll_wheel_user_action_ch1:
@@ -198,7 +199,7 @@ blueprint:
           description: |
             - <relaxed>: one action call after scrolling
             - <instant>: many action calls while scrolling
-            
+
             Beware:
             - for <instant> mode the 9 hidden sensor entities of Bilresa device have to be enabled
         scroll_wheel_user_action_ch2:
@@ -296,7 +297,7 @@ blueprint:
           description: |
             - <relaxed>: one action call after scrolling
             - <instant>: many action calls while scrolling
-            
+
             Beware:
             - for <instant> mode the 9 hidden sensor entities of Bilresa device have to be enabled
         scroll_wheel_user_action_ch3:
@@ -309,7 +310,7 @@ blueprint:
           default: []
           selector:
             action: {}
-          
+
 
     # input selectors: global settings for all channels
     # global light settings
@@ -332,7 +333,7 @@ blueprint:
           selector:
             number:
               mode: box
-    
+
         min_color_temp:
           name: Minimum color temperature
           description: "minimum color temperature in K (for color_mode = color_temp)"
@@ -368,7 +369,7 @@ blueprint:
           selector:
             number:
               mode: box
-              
+
         light_transition_duration:
           name: Transition duration
           description: "Controls the duration of transitions"
@@ -376,14 +377,14 @@ blueprint:
           selector:
             number:
               mode: box
-              
-                    
+
+
     # global media settings
     global_media_setting:
       name: Global media settings
       collapsed: true
       input:
-        # media_player              
+        # media_player
         volume_step_pct:
           name: Media player volume step percentage
           description: "change in volume in %"
@@ -394,8 +395,8 @@ blueprint:
         volume_use_up_down_for_instant:
           name: "Media player: use actions volume_up/volume_down for <instant> mode"
           description: |
-            <instant> mode uses standard actions volume_up/volume_down instead of <volume step percentage> by default 
-            
+            <instant> mode uses standard actions volume_up/volume_down instead of <volume step percentage> by default
+
             if this is to coarse disable this option and adjust the <volume step percentage> value to the lowest value which still changes the volume while scrolling in both directions
           default: true
           selector:
@@ -431,7 +432,7 @@ blueprint:
             number:
               mode: box
               step: 1
-          
+
 
 # automation logic
 alias: Ikea_bilresa_scroll_wheel
@@ -518,7 +519,7 @@ trigger:
 condition:
   - condition: template
     value_template: >-
-      {{ trigger.event.data.old_state.state != 'unavailable' 
+      {{ trigger.event.data.old_state.state != 'unavailable'
          and trigger.event.data.new_state.state != 'unavailable'
       }}
 action:
@@ -620,7 +621,7 @@ action:
           - condition: template
             value_template: >
               {{ ( (vars['scroll_wheel_mode_ext_' ~ channel] == 'relaxed') and (trigger.id == ('scroll_left_' ~ channel) or trigger.id == ('scroll_right_' ~ channel))) or
-                 (  (vars['scroll_wheel_mode_ext_' ~ channel] == 'instant') and (trigger.id == ('scroll_left_ext_' ~ channel) or trigger.id == ('scroll_right_ext_' ~ channel)) and trigger.event.data.new_state.state == '1' )  
+                 (  (vars['scroll_wheel_mode_ext_' ~ channel] == 'instant') and (trigger.id == ('scroll_left_ext_' ~ channel) or trigger.id == ('scroll_right_ext_' ~ channel)) and trigger.event.data.new_state.state == '1' )
               }}
         sequence:
           - variables:
@@ -676,7 +677,7 @@ action:
                                 brightness_step_pct: >-
                                         {{ iif(scroll_direction == 'right', scroll_clicks * var_dim_step_pct,
                                         -1*([scroll_clicks * var_dim_step_pct, state_attr(repeat.item, 'brightness')*100/254
-                                         - var_min_pct]|min)) 
+                                         - var_min_pct]|min))
                                         }}
                                 transition: "{{ var_light_transition_duration }}"
                     # scroll wheel mode: <lights: color temp>
@@ -722,8 +723,8 @@ action:
                               target:
                                 entity_id: "{{ repeat.item }}"
                               data:
-                                volume_level: >- 
-                                            {{ [[state_attr(repeat.item, 'volume_level')*100 + 
+                                volume_level: >-
+                                            {{ [[state_attr(repeat.item, 'volume_level')*100 +
                                                 iif(scroll_direction == 'right', 1, -1)* scroll_clicks * var_volume_step_pct, var_volume_max_pct] | min, 0] | max / 100
                                             }}
                           else:
@@ -748,7 +749,7 @@ mode: queued
 max: !input max_queued_automation_calls
 max_exceeded: silent
 variables:
-  vars: {'targets_entities_ch1': !input scroll_wheel_target_ch1, 'targets_entities_ch2': !input scroll_wheel_target_ch2, 'targets_entities_ch3': !input scroll_wheel_target_ch3, 
+  vars: {'targets_entities_ch1': !input scroll_wheel_target_ch1, 'targets_entities_ch2': !input scroll_wheel_target_ch2, 'targets_entities_ch3': !input scroll_wheel_target_ch3,
   'scroll_wheel_mode_ch1': !input scroll_wheel_mode_ch1, 'scroll_wheel_mode_ch2': !input scroll_wheel_mode_ch2, 'scroll_wheel_mode_ch3': !input scroll_wheel_mode_ch3,
   'scroll_wheel_mode_ext_ch1': !input scroll_wheel_mode_ext_ch1, 'scroll_wheel_mode_ext_ch2': !input scroll_wheel_mode_ext_ch2, 'scroll_wheel_mode_ext_ch3': !input scroll_wheel_mode_ext_ch3,
   'scroll_wheel_mode_dynamic_ch1': !input scroll_wheel_mode_dynamic_ch1, 'scroll_wheel_mode_dynamic_ch2': !input scroll_wheel_mode_dynamic_ch2, 'scroll_wheel_mode_dynamic_ch3': !input scroll_wheel_mode_dynamic_ch3
@@ -773,19 +774,19 @@ trigger_variables:
   # Channel 1
   var_button_ch1: >
     {% for item in device_entities(var_remote) %}
-      {% if item is match('^event\\..*pos_1_press$') %}
+      {% if item is match('^event\\..*channel_1_button_press$') %}
         {{ item }}
       {% endif %}
     {% endfor %}
   var_scroll_left_ch1: >
     {% for item in device_entities(var_remote) %}
-      {% if item is match('^event\\..*pos_1_ccw$') %}
+      {% if item is match('^event\\..*channel_1_counter_clockwise_scroll$') %}
         {{ item }}
       {% endif %}
     {% endfor %}
   var_scroll_right_ch1: >
     {% for item in device_entities(var_remote) %}
-      {% if item is match('^event\\..*pos_1_cw$') %}
+      {% if item is match('^event\\..*channel_1_clockwise_scroll$') %}
         {{ item }}
       {% endif %}
     {% endfor %}
@@ -793,19 +794,19 @@ trigger_variables:
   # Channel 2
   var_button_ch2: >
     {% for item in device_entities(var_remote) %}
-      {% if item is match('^event\\..*pos_2_press$') %}
+      {% if item is match('^event\\..*channel_2_button_press$') %}
         {{ item }}
       {% endif %}
     {% endfor %}
   var_scroll_left_ch2: >
     {% for item in device_entities(var_remote) %}
-      {% if item is match('^event\\..*pos_2_ccw$') %}
+      {% if item is match('^event\\..*channel_2_counter_clockwise_scroll$') %}
         {{ item }}
       {% endif %}
     {% endfor %}
   var_scroll_right_ch2: >
     {% for item in device_entities(var_remote) %}
-      {% if item is match('^event\\..*pos_2_cw$') %}
+      {% if item is match('^event\\..*channel_2_clockwise_scroll$') %}
         {{ item }}
       {% endif %}
     {% endfor %}
@@ -813,19 +814,62 @@ trigger_variables:
   # Channel 3
   var_button_ch3: >
     {% for item in device_entities(var_remote) %}
-      {% if item is match('^event\\..*pos_3_press$') %}
+      {% if item is match('^event\\..*channel_3_button_press$') %}
         {{ item }}
       {% endif %}
     {% endfor %}
   var_scroll_left_ch3: >
     {% for item in device_entities(var_remote) %}
-      {% if item is match('^event\\..*pos_3_ccw$') %}
+      {% if item is match('^event\\..*channel_3_counter_clockwise_scroll$') %}
         {{ item }}
       {% endif %}
     {% endfor %}
   var_scroll_right_ch3: >
     {% for item in device_entities(var_remote) %}
-      {% if item is match('^event\\..*pos_3_cw$') %}
+      {% if item is match('^event\\..*channel_3_clockwise_scroll$') %}
         {{ item }}
       {% endif %}
     {% endfor %}
+    
+    # Instant mode scroll wheel entities
+    # Channel 1 (ext - sensor entities for instant mode)
+    var_scroll_left_ext_ch1: >
+      {% for item in device_entities(var_remote) %}
+        {% if item is match('^sensor\\..*current_switch_position_2$') %}
+          {{ item }}
+        {% endif %}
+      {% endfor %}
+    var_scroll_right_ext_ch1: >
+      {% for item in device_entities(var_remote) %}
+        {% if item is match('^sensor\\..*current_switch_position_1$') %}
+          {{ item }}
+        {% endif %}
+      {% endfor %}
+  
+    # Channel 2 (ext - sensor entities for instant mode)
+    var_scroll_left_ext_ch2: >
+      {% for item in device_entities(var_remote) %}
+        {% if item is match('^sensor\\..*current_switch_position_5$') %}
+          {{ item }}
+        {% endif %}
+      {% endfor %}
+    var_scroll_right_ext_ch2: >
+      {% for item in device_entities(var_remote) %}
+        {% if item is match('^sensor\\..*current_switch_position_4$') %}
+          {{ item }}
+        {% endif %}
+      {% endfor %}
+  
+    # Channel 3 (ext - sensor entities for instant mode)
+    var_scroll_left_ext_ch3: >
+      {% for item in device_entities(var_remote) %}
+        {% if item is match('^sensor\\..*current_switch_position_8$') %}
+          {{ item }}
+        {% endif %}
+      {% endfor %}
+    var_scroll_right_ext_ch3: >
+      {% for item in device_entities(var_remote) %}
+        {% if item is match('^sensor\\..*current_switch_position_7$') %}
+          {{ item }}
+        {% endif %}
+      {% endfor %}
